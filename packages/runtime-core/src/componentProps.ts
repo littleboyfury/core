@@ -199,6 +199,7 @@ export function initProps(
 
   instance.propsDefaults = Object.create(null)
 
+  // 没有实际效果
   setFullProps(instance, rawProps, props, attrs)
 
   // ensure all declared prop keys are present
@@ -215,6 +216,7 @@ export function initProps(
 
   if (isStateful) {
     // stateful
+    // TODO shallowReactive 创建响应式
     instance.props = isSSR ? props : shallowReactive(props)
   } else {
     if (!instance.type.props) {

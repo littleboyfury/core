@@ -137,6 +137,7 @@ export type ShallowReactive<T> = T & { [ShallowReactiveMarker]?: true }
  * @param target - The source object.
  * @see {@link https://vuejs.org/api/reactivity-advanced.html#shallowreactive}
  */
+// TODO shallowReactive
 export function shallowReactive<T extends object>(
   target: T,
 ): ShallowReactive<T> {
@@ -289,8 +290,10 @@ function createReactiveObject(
   if (existingProxy) {
     return existingProxy
   }
+  // TODO 创建 proxy
   const proxy = new Proxy(
     target,
+    // TODO 集合收集，基本收集
     targetType === TargetType.COLLECTION ? collectionHandlers : baseHandlers,
   )
   proxyMap.set(target, proxy)
@@ -418,6 +421,7 @@ export function markRaw<T extends object>(value: T): Raw<T> {
  *
  * @param value - The value for which a reactive proxy shall be created.
  */
+// TODO 如果是 obj，继续深层次调用
 export const toReactive = <T extends unknown>(value: T): T =>
   isObject(value) ? reactive(value) : value
 

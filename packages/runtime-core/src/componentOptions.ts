@@ -721,6 +721,7 @@ export function applyOptions(instance: ComponentInternalInstance): void {
     }
   }
 
+  // TODO 注册生命周期狗子函数
   registerLifecycleHook(onBeforeMount, beforeMount)
   registerLifecycleHook(onMounted, mounted)
   registerLifecycleHook(onBeforeUpdate, beforeUpdate)

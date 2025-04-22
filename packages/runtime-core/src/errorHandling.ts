@@ -74,6 +74,7 @@ export function callWithErrorHandling(
   args?: unknown[],
 ): any {
   try {
+    // TODO 调用了 setup
     return args ? fn(...args) : fn()
   } catch (err) {
     handleError(err, instance, type)

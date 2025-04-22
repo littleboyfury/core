@@ -250,10 +250,12 @@ export type CreateAppFunction<HostElement> = (
 
 let uid = 0
 
+// TODO createApp({})
 export function createAppAPI<HostElement>(
   render: RootRenderFunction<HostElement>,
   hydrate?: RootHydrateFunction,
 ): CreateAppFunction<HostElement> {
+  // TODO createApp({})
   return function createApp(rootComponent, rootProps = null) {
     if (!isFunction(rootComponent)) {
       rootComponent = extend({}, rootComponent)
@@ -355,6 +357,8 @@ export function createAppAPI<HostElement>(
         return app
       },
 
+      // TODO app.mount 之后调用了该 mount
+      // rootContainer #app false undefined
       mount(
         rootContainer: HostElement,
         isHydrate?: boolean,
@@ -369,6 +373,7 @@ export function createAppAPI<HostElement>(
                 ` you need to unmount the previous app by calling \`app.unmount()\` first.`,
             )
           }
+          // app._ceVNode undefined
           const vnode = app._ceVNode || createVNode(rootComponent, rootProps)
           // store app context on the root VNode.
           // this will be set on the root instance on initial mount.
@@ -471,6 +476,7 @@ export function createAppAPI<HostElement>(
       },
     })
 
+    // 编译后没有这段代码
     if (__COMPAT__) {
       installAppCompatProperties(app, context, render)
     }

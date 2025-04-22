@@ -491,6 +491,7 @@ function createBaseVNode(
     ctx: currentRenderingInstance,
   } as VNode
 
+  // 值是 true
   if (needFullChildrenNormalization) {
     normalizeChildren(vnode, children)
     // normalize suspense children
@@ -539,9 +540,8 @@ function createBaseVNode(
 
 export { createBaseVNode as createElementVNode }
 
-export const createVNode = (
-  __DEV__ ? createVNodeWithArgsTransform : _createVNode
-) as typeof _createVNode
+export const createVNode = // __DEV__ true
+(__DEV__ ? createVNodeWithArgsTransform : _createVNode) as typeof _createVNode
 
 function _createVNode(
   type: VNodeTypes | ClassComponent | typeof NULL_DYNAMIC_COMPONENT,
@@ -551,6 +551,7 @@ function _createVNode(
   dynamicProps: string[] | null = null,
   isBlockNode = false,
 ): VNode {
+  // false
   if (!type || type === NULL_DYNAMIC_COMPONENT) {
     if (__DEV__ && !type) {
       warn(`Invalid vnode type when creating vnode: ${type}.`)

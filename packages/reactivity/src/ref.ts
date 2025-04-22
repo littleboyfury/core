@@ -115,13 +115,16 @@ class RefImpl<T = any> {
   public readonly [ReactiveFlags.IS_SHALLOW]: boolean = false
 
   constructor(value: T, isShallow: boolean) {
+    // TODO isShallow true 对深层次不进行响应式处理
     this._rawValue = isShallow ? value : toRaw(value)
+    // TODO toReactive 创建响应式对象
     this._value = isShallow ? value : toReactive(value)
     this[ReactiveFlags.IS_SHALLOW] = isShallow
   }
 
   get value() {
     if (__DEV__) {
+      // TODO 收集依赖
       this.dep.track({
         target: this,
         type: TrackOpTypes.GET,
@@ -143,6 +146,7 @@ class RefImpl<T = any> {
     if (hasChanged(newValue, oldValue)) {
       this._rawValue = newValue
       this._value = useDirectValue ? newValue : toReactive(newValue)
+      // TODO 通知更新
       if (__DEV__) {
         this.dep.trigger({
           target: this,

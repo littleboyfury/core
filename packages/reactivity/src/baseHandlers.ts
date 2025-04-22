@@ -241,6 +241,7 @@ class ReadonlyReactiveHandler extends BaseReactiveHandler {
   }
 }
 
+// TODO new proxy 一般 mutableHandlers
 export const mutableHandlers: ProxyHandler<object> =
   /*@__PURE__*/ new MutableReactiveHandler()
 

@@ -71,7 +71,9 @@ let renderer: Renderer<Element | ShadowRoot> | HydrationRenderer
 
 let enabledHydration = false
 
+// TODO ensureRenderer
 function ensureRenderer() {
+  // TODO default rendererOptions
   return (
     renderer ||
     (renderer = createRenderer<Node, Element | ShadowRoot>(rendererOptions))
@@ -95,7 +97,10 @@ export const hydrate = ((...args) => {
   ensureHydrationRenderer().hydrate(...args)
 }) as RootHydrateFunction
 
+// TODO createApp
 export const createApp = ((...args) => {
+  // TODO 初始化renderer ensureRenderer()
+  // 调用 createApp 进行响应式初始化
   const app = ensureRenderer().createApp(...args)
 
   if (__DEV__) {
@@ -104,7 +109,9 @@ export const createApp = ((...args) => {
   }
 
   const { mount } = app
+  // TODO app.mount
   app.mount = (containerOrSelector: Element | ShadowRoot | string): any => {
+    // TODO #app
     const container = normalizeContainer(containerOrSelector)
     if (!container) return
 

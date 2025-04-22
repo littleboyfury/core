@@ -796,6 +796,7 @@ export function isStatefulComponent(
 
 export let isInSSRComponentSetup = false
 
+// TODO setup 函数？？？
 export function setupComponent(
   instance: ComponentInternalInstance,
   isSSR = false,
@@ -805,9 +806,12 @@ export function setupComponent(
 
   const { props, children } = instance.vnode
   const isStateful = isStatefulComponent(instance)
+  // TODO initProps
   initProps(instance, props, isStateful, isSSR)
+  // TODO initSlots
   initSlots(instance, children, optimized)
 
+  // TODO 运行 setup 函数，编译模板
   const setupResult = isStateful
     ? setupStatefulComponent(instance, isSSR)
     : undefined
@@ -816,6 +820,7 @@ export function setupComponent(
   return setupResult
 }
 
+// TODO 运行 setup 收集依赖
 function setupStatefulComponent(
   instance: ComponentInternalInstance,
   isSSR: boolean,
@@ -856,10 +861,14 @@ function setupStatefulComponent(
   // 2. call setup()
   const { setup } = Component
   if (setup) {
+    // TODO 暂停收集
     pauseTracking()
+    // TODO setup.length = 0, instance.setUpContext = null
     const setupContext = (instance.setupContext =
       setup.length > 1 ? createSetupContext(instance) : null)
+    // TODO setCurrentInstance(instance)
     const reset = setCurrentInstance(instance)
+    // TODO 执行 setup，创建了 ref 响应式对象，并且返回 setupResult 是 setup 的返回值，包括响应式对象，方法等
     const setupResult = callWithErrorHandling(
       setup,
       instance,
@@ -869,15 +878,18 @@ function setupStatefulComponent(
         setupContext,
       ],
     )
+    // TODO 是否是异步 setup
     const isAsyncSetup = isPromise(setupResult)
     resetTracking()
     reset()
 
+    // TODO false
     if ((isAsyncSetup || instance.sp) && !isAsyncWrapper(instance)) {
       // async setup / serverPrefetch, mark as async boundary for useId()
       markAsyncBoundary(instance)
     }
 
+    // TODO false
     if (isAsyncSetup) {
       setupResult.then(unsetCurrentInstance, unsetCurrentInstance)
       if (isSSR) {
@@ -931,6 +943,7 @@ export function handleSetupResult(
       instance.render = setupResult as InternalRenderFunction
     }
   } else if (isObject(setupResult)) {
+    // TODO setupResult 是一个对象
     if (__DEV__ && isVNode(setupResult)) {
       warn(
         `setup() should not return VNodes directly - ` +
@@ -942,7 +955,9 @@ export function handleSetupResult(
     if (__DEV__ || __FEATURE_PROD_DEVTOOLS__) {
       instance.devtoolsRawSetupState = setupResult
     }
+    // TODO 处理 ref.value 模板不需要 .value
     instance.setupState = proxyRefs(setupResult)
+    // TODO 生产环境 ctx 上没有 setup 属性
     if (__DEV__) {
       exposeSetupStateOnRenderContext(instance)
     }
@@ -953,6 +968,7 @@ export function handleSetupResult(
       }`,
     )
   }
+  // TODO 编译模板
   finishComponentSetup(instance, isSSR)
 }
 
@@ -987,6 +1003,7 @@ export function finishComponentSetup(
 ): void {
   const Component = instance.type as ComponentOptions
 
+  // TODO false
   if (__COMPAT__) {
     convertLegacyRenderFn(instance)
 
@@ -1000,6 +1017,16 @@ export function finishComponentSetup(
   if (!instance.render) {
     // only do on-the-fly compile if not in SSR - SSR on-the-fly compilation
     // is done by server-renderer
+    // TODO compile 模板编译器 compile('<div>{{a}}</div>') 包含 ast 对象 code 等
+    //"const _Vue = Vue
+    //
+    // return function render(_ctx, _cache) {
+    //   with (_ctx) {
+    //     const { toDisplayString: _toDisplayString, openBlock: _openBlock, createElementBlock: _createElementBlock } = _Vue
+    //
+    //     return (_openBlock(), _createElementBlock("div", null, _toDisplayString(a), 1 /* TEXT */))
+    //   }
+    // }"
     if (!isSSR && compile && !Component.render) {
       const template =
         (__COMPAT__ &&
@@ -1032,6 +1059,7 @@ export function finishComponentSetup(
             extend(finalCompilerOptions.compatConfig, Component.compatConfig)
           }
         }
+        // TODO 变成成为 render 函数包括创建元素功能，执行即可收集依赖
         Component.render = compile(template, finalCompilerOptions)
         if (__DEV__) {
           endMeasure(instance, `compile`)
@@ -1054,6 +1082,7 @@ export function finishComponentSetup(
     const reset = setCurrentInstance(instance)
     pauseTracking()
     try {
+      // TODO 支持选项式 API
       applyOptions(instance)
     } finally {
       resetTracking()

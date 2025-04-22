@@ -41,6 +41,7 @@ const doc = (typeof document !== 'undefined' ? document : null) as Document
 
 const templateContainer = doc && /*@__PURE__*/ doc.createElement('template')
 
+// TODO default node ops
 export const nodeOps: Omit<RendererOptions<Node, Element>, 'patchProp'> = {
   insert: (child, parent, anchor) => {
     parent.insertBefore(child, anchor || null)

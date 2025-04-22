@@ -286,6 +286,7 @@ function createInstrumentationGetter(isReadonly: boolean, shallow: boolean) {
   }
 }
 
+// TODO new Proxy 集合 mutableCollectionHandlers
 export const mutableCollectionHandlers: ProxyHandler<CollectionTypes> = {
   get: /*@__PURE__*/ createInstrumentationGetter(false, false),
 }
